@@ -21,12 +21,41 @@ buttons.forEach((button) => {
   })
 })
 
-//operation variables
+// TODO - displayData processing
+// Pseudo code
+/* 
+
+When a number button is pressed
+  update displayData and proceed with accepting input
+
+create a new function for when a operator button is pressed
+  check for any invalid inputs (anything that is not a number or operators)
+    if invalid, update input field to say "invalid input"
+      clear text as soon as another button or keyboard stroke is pressed
+    add number and operator to an array "operationArray"
+  
+  
+  clear the input field, and displayData, and repeat.
+    create event listeners to listen for + - * / keyups and run this function
+
+create a function for when CLEAR is pressed
+  remove all data from numData array
+  remove all data from operatorData array
+  set value of displayData = ""
+  clear input text field 
+
+create a function for when enter is pressed, this should start calculation
+  all numbers and operators should already be of correct types
+  use reduce() to itterate through each operation, doing one operation at a time
+  
+  create event listeners to listen for ENTER on keyboard, and run this function
+*/
+// operation variables
 let num1
 let num2
 let operator = ""
 
-//operate function to determine calculation input
+// operate function to determine calculation input
 
 function operate(operator, num1, num2) {
   if (
