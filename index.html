@@ -9,7 +9,9 @@
     <link
       rel="stylesheet"
       href="./style.css" />
-    <script src="./script.js"></script>
+    <script
+      src="./script.js"
+      defer></script>
   </head>
   <body>
     <div class="container">
@@ -19,26 +21,86 @@
             <input
               type="text"
               name="calInput"
-              id="calInput" value="555"/>
+              id="calInput"
+              value="555" />
           </div>
           <div class="calculator-numpad">
-            <button class="btn-number">1</button>
-            <button class="btn-number">2</button>
-            <button class="btn-number">3</button>
-            <button class="btn-operator">+</button>
-            <button class="btn-number">4</button>
-            <button class="btn-number">5</button>
-            <button class="btn-number">6</button>
-            <button class="btn-operator">-</button>
-            <button class="btn-number">7</button>
-            <button class="btn-number">8</button>
-            <button class="btn-number">9</button>
-            <button class="btn-operator">x</button>
-            <button class="btn-clear">1</button>
-            <button class="btn-number">0</button>
-            <button class="btn-equals">=</button>
-            <button class="btn-operator">/</button>
-            </div>
+            <button
+              class="btn-number"
+              data-num="1">
+              1
+            </button>
+            <button
+              class="btn-number"
+              data-num="2">
+              2
+            </button>
+            <button
+              class="btn-number"
+              data-num="3">
+              3
+            </button>
+            <button
+              class="btn-operator"
+              data-num="+">
+              +
+            </button>
+            <button
+              class="btn-number"
+              data-num="4">
+              4
+            </button>
+            <button
+              class="btn-number"
+              data-num="5">
+              5
+            </button>
+            <button
+              class="btn-number"
+              data-num="6">
+              6
+            </button>
+            <button
+              class="btn-operator"
+              data-num="-">
+              -
+            </button>
+            <button
+              class="btn-number"
+              data-num="7">
+              7
+            </button>
+            <button
+              class="btn-number"
+              data-num="8">
+              8
+            </button>
+            <button
+              class="btn-number"
+              data-num="9">
+              9
+            </button>
+            <button
+              class="btn-operator"
+              data-num="*">
+              x
+            </button>
+            <button class="btn-clear">CLR</button>
+            <button
+              class="btn-number"
+              data-num="0">
+              0
+            </button>
+            <button
+              class="btn-equals"
+              data-num="=">
+              =
+            </button>
+            <button
+              class="btn-operator"
+              data-num="/">
+              /
+            </button>
           </div>
         </div>
       </div>
