@@ -1,3 +1,19 @@
+// UI interaction
+// Fetch elements from HTML, assign variables
+const buttons = document.querySelectorAll(".calculator-numpad > button")
+const display = document.querySelectorAll(".calculator-screen > input")
+
+console.log(buttons)
+console.log(display)
+// Assign event listeners to all buttons
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    //Logic to add to each button for now alert for testing
+    const buttonValue = button.getAttribute("data-num")
+    alert(buttonValue + " was clicked")
+  })
+})
+
 //operation variables
 let num1
 let num2
