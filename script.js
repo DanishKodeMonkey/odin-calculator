@@ -1,67 +1,139 @@
-// UI interaction
-// Fetch elements from HTML, assign variables
+// UI variables
 const buttons = document.querySelectorAll(".calculator-numpad > button")
 const display = document.getElementById("calInput")
-let displayData = ""
+let curNum
+let displayData
 display.value = ""
-let displayState = false
+let setState = false
 let result
+let prevResult
+const invType = /[a-zA-Z]+/g
 
-// if displayState is true, clear data, set displayState to false.
+//Operation variables
+let num1
+let num2
+let operator = ""
+
+// if setState is true, clear data, set setState to false.
 function getState() {
-  if (displayState) {
+  if (setState) {
     display.value = ""
-    displayData = ""
-    displayState = false
+    displayData = 0
+    setState = false
+  }
+}
+
+//Function for later keyboard implementation.
+// Idea is to use checkNum for any keyboard strokes, if it's not a number, or operator refuse it.
+function checkNum(num) {
+  if (displayData == invType) {
+    console.log(`Type: ${typeof num}`)
+    display.value = "Invalid char"
+    setState = true
   }
 }
 // Assign event listeners to all buttons
 buttons.forEach((button) => {
-  button.addEventListener("click", () => {
+  button.addEventListener("click", (e) => {
+    //Debug start state
     console.log(
-      `Current state: 
-      displayState: ${displayState} 
+      `Start state: 
+
+      button clicked: ${e.target.className}
+      
+      setState: ${setState} 
       display.value: ${display.value} 
-      displayData: ${displayData} 
+      displayData: ${displayData}
+      curNum: ${curNum} 
       num1: ${num1} 
       num2: ${num2} 
-      operator: ${operator}`
+      operator: ${operator}
+      result: ${result}
+      previous result: ${prevResult}`
     )
+    //end
+
+    //Number checks
     if (button.className === "btn-number") {
       getState()
       const buttonValue = button.getAttribute("data-num")
+      curNum == undefined ? (curNum = buttonValue) : (curNum += buttonValue)
       display.value += buttonValue
       displayData = display.value
-      console.log(displayData)
+
+      // Operator checks
     } else if (button.className == "btn-operator") {
       getState()
       operator = button.getAttribute("data-num")
-      if (num1 !== undefined) {
-        num2 = Number(displayData)
-        displayData = ""
-        console.log("num2 input: " + num1)
-      } else {
-        num1 = Number(displayData)
-        console.log("num1 input: " + num2)
-        if (
-          typeof num1 == "number" &&
-          typeof num2 == "number" &&
-          typeof operator == "string"
-        ) {
-          operate(num1, operator, num2)
-          let result = operate(num1, operator, num2)
-          display.value = result
-        }
-        displayState = true
+      if (prevResult !== undefined) {
+        num1 = prevResult
+        //Debug operator start
+        console.log(`PrevResult state: 
+
+      prevResult caught! is ${prevResult}
+
+      button clicked: ${e.target.className}
+      
+      setState: ${setState} 
+      display.value: ${display.value} 
+      displayData: ${displayData}
+      curNum: ${curNum} 
+      num1: ${num1} 
+      num2: ${num2} 
+      operator: ${operator}
+      result: ${result}
+      previous result: ${prevResult}`)
+        //end
       }
+      if (curNum !== "") {
+        if (num1 !== undefined) {
+          console.log(
+            `mid state: 
+    
+          button clicked: ${e.target.className}
+          
+          setState: ${setState} 
+          display.value: ${display.value} 
+          displayData: ${displayData}
+          curNum: ${curNum} 
+          num1: ${num1} 
+          num2: ${num2} 
+          operator: ${operator}
+          result: ${result}
+          previous result: ${prevResult}`
+          )
+          //end
+          num2 = Number(curNum)
+          console.log("num2 input: " + num2)
+          curNum = ""
+        } else {
+          num1 = Number(curNum)
+          console.log("num1 input: " + num1)
+          curNum = ""
+        }
+      }
+      if (
+        typeof num1 == "number" &&
+        typeof num2 == "number" &&
+        typeof operator == "string"
+      ) {
+        operate(num1, operator, num2)
+        result = operate(num1, operator, num2)
+        display.value = result
+        num1 = num2 = undefined
+      }
+      setState = true
+
+      //Equals checks
     } else if (button.className == "btn-equals") {
+      if (prevResult !== undefined) {
+        num1 = prevResult
+      }
       if (num1 !== undefined) {
-        num2 = Number(displayData)
+        num2 = Number(curNum)
         displayData = ""
-        console.log("num2 input: " + num1)
       } else {
-        num1 = Number(displayData)
-        console.log("num1 input: " + num2)
+        num1 = Number(curNum)
       }
       if (
         typeof num1 == "number" &&
@@ -69,20 +141,40 @@ buttons.forEach((button) => {
         typeof operator == "string"
       ) {
         console.log("Sending to operate:" + num1 + "" + operator + "" + num2)
-        let result = operate(num1, operator, num2)
+        result = operate(num1, operator, num2)
         display.value = result
+        num1 = num2 = undefined
+        curNum = ""
       }
-      displayState = true
+
+      //clear checks
+    } else if (button.className == "btn-clear") {
+      displayData = undefined
+      display.value = ""
+      displayData = undefined
+      curNum = 0
+      num1 = undefined
+      num2 = undefined
+      operator = ""
+      result = undefined
+      prevResult = undefined
     }
+
+    prevResult = result
+    //debug new state
     console.log(
       `New state: 
-      displayState: ${displayState} 
+      setState: ${setState} 
       display.value: ${display.value} 
-      displayData: ${displayData} 
+      displayData: ${displayData}
+      curNum: ${curNum} 
       num1: ${num1} 
       num2: ${num2} 
-      operator: ${operator}`
+      operator: ${operator}
+      result: ${result}
+      previous result: ${prevResult}`
     )
+    //end
   })
 })
 
@@ -117,10 +209,20 @@ create a function for when enter is pressed, this should start calculation
   create event listeners to listen for ENTER on keyboard, and run this function
 */
 // operation variables
-let num1
-let num2
-let operator = ""
-let prevResult
+const OPT = ["+", "-", "*", "/"]
+
+console.log(
+  `Operate state: 
+  setState: ${setState} 
+  display.value: ${display.value} 
+  displayData: ${displayData}
+  curNum: ${curNum} 
+  num1: ${num1} 
+  num2: ${num2} 
+  operator: ${operator}
+  result: ${result}
+  previous result: ${prevResult}`
+)
 
 // operate function to determine calculation input
 
@@ -129,10 +231,12 @@ function operate(num1, operator, num2) {
   num1: ${num1}
   num2: ${num2}
   operator: ${operator}`)
+
+  //Typecheck before operation
   if (
     typeof num1 !== "number" ||
     typeof num2 !== "number" ||
-    typeof operator !== "string"
+    OPT.includes(operator) !== true
   ) {
     console.log(`Invalid input type:
     num1 type: ${typeof num1}
@@ -156,23 +260,23 @@ function operate(num1, operator, num2) {
 // add
 
 function add(num1, num2) {
-  return num1 + num2
+  return Math.floor((num1 + num2) * 100) / 100
 }
 
 // subtract
 
 function subtract(num1, num2) {
-  return num1 - num2
+  return Math.floor((num1 - num2) * 100) / 100
 }
 
 // multiply
 
 function multiply(num1, num2) {
-  return num1 * num2
+  return Math.floor(num1 * num2 * 100) / 100
 }
 
 // divide
 
 function divide(num1, num2) {
-  return num1 / num2
+  return Math.floor((num1 + num2) * 100) / 100
 }
