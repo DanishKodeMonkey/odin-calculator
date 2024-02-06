@@ -130,19 +130,6 @@ buttons.forEach((button) => {
 
 const OPT = ["+", "-", "*", "/"]
 
-console.log(
-  `Operate state: 
-  setState: ${setState} 
-  display.value: ${display.value} 
-  displayData: ${displayData}
-  curNum: ${curNum} 
-  num1: ${num1} 
-  num2: ${num2} 
-  operator: ${operator}
-  result: ${result}
-  previous result: ${prevResult}`
-)
-
 // operate function to determine calculation input
 
 function operate(num1, operator, num2) {
