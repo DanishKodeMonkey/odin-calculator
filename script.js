@@ -2,22 +2,87 @@
 // Fetch elements from HTML, assign variables
 const buttons = document.querySelectorAll(".calculator-numpad > button")
 const display = document.getElementById("calInput")
-display.addEventListener("keyup", (e) => {
-  if (e.key === "Enter") {
-    displayData = display.value
-    console.log(displayData)
-  }
-})
 let displayData = ""
+display.value = ""
+let displayState = false
+let result
 
+// if displayState is true, clear data, set displayState to false.
+function getState() {
+  if (displayState) {
+    display.value = ""
+    displayData = ""
+    displayState = false
+  }
+}
 // Assign event listeners to all buttons
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
-    //Logic to add to each button for now alert for testing
-    const buttonValue = button.getAttribute("data-num")
-    display.value += buttonValue
-    let displayData = display.value
-    console.log(displayData)
+    console.log(
+      `Current state: 
+      displayState: ${displayState} 
+      display.value: ${display.value} 
+      displayData: ${displayData} 
+      num1: ${num1} 
+      num2: ${num2} 
+      operator: ${operator}`
+    )
+    if (button.className === "btn-number") {
+      getState()
+      const buttonValue = button.getAttribute("data-num")
+      display.value += buttonValue
+      displayData = display.value
+      console.log(displayData)
+    } else if (button.className == "btn-operator") {
+      getState()
+      operator = button.getAttribute("data-num")
+      if (num1 !== undefined) {
+        num2 = Number(displayData)
+        displayData = ""
+        console.log("num2 input: " + num1)
+      } else {
+        num1 = Number(displayData)
+        console.log("num1 input: " + num2)
+        if (
+          typeof num1 == "number" &&
+          typeof num2 == "number" &&
+          typeof operator == "string"
+        ) {
+          operate(num1, operator, num2)
+          let result = operate(num1, operator, num2)
+          display.value = result
+        }
+        displayState = true
+      }
+    } else if (button.className == "btn-equals") {
+      if (num1 !== undefined) {
+        num2 = Number(displayData)
+        displayData = ""
+        console.log("num2 input: " + num1)
+      } else {
+        num1 = Number(displayData)
+        console.log("num1 input: " + num2)
+      }
+      if (
+        typeof num1 == "number" &&
+        typeof num2 == "number" &&
+        typeof operator == "string"
+      ) {
+        console.log("Sending to operate:" + num1 + "" + operator + "" + num2)
+        let result = operate(num1, operator, num2)
+        display.value = result
+      }
+      displayState = true
+    }
+    console.log(
+      `New state: 
+      displayState: ${displayState} 
+      display.value: ${display.value} 
+      displayData: ${displayData} 
+      num1: ${num1} 
+      num2: ${num2} 
+      operator: ${operator}`
+    )
   })
 })
 
@@ -32,7 +97,8 @@ create a new function for when a operator button is pressed
   check for any invalid inputs (anything that is not a number or operators)
     if invalid, update input field to say "invalid input"
       clear text as soon as another button or keyboard stroke is pressed
-    add number and operator to an array "operationArray"
+    input number into num1, if full input to num2
+    input operator into operator.
   
   
   clear the input field, and displayData, and repeat.
@@ -54,25 +120,33 @@ create a function for when enter is pressed, this should start calculation
 let num1
 let num2
 let operator = ""
+let prevResult
 
 // operate function to determine calculation input
 
-function operate(operator, num1, num2) {
+function operate(num1, operator, num2) {
+  console.log(`Operate start, received data:
+  num1: ${num1}
+  num2: ${num2}
+  operator: ${operator}`)
   if (
-    typeof operator !== "string" ||
     typeof num1 !== "number" ||
-    typeof num2 !== "number"
+    typeof num2 !== "number" ||
+    typeof operator !== "string"
   ) {
-    return "operate: Invalid input type"
+    console.log(`Invalid input type:
+    num1 type: ${typeof num1}
+    num2 type: ${typeof num2}
+    operator type: ${typeof operator}`)
   }
   switch (operator) {
-    case "plus":
+    case "+":
       return add(num1, num2)
-    case "minus":
+    case "-":
       return subtract(num1, num2)
-    case "asterisk":
+    case "*":
       return multiply(num1, num2)
-    case "slash":
+    case "/":
       return divide(num1, num2)
     default:
       return "operate: operator not found"
