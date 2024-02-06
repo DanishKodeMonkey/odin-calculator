@@ -7,6 +7,7 @@ display.value = ""
 let setState = false
 let result
 let prevResult
+//RegEx for keyboard implementation. TODO
 const invType = /[a-zA-Z]+/g
 
 //Operation variables
@@ -23,7 +24,7 @@ function getState() {
   }
 }
 
-//Function for later keyboard implementation.
+//Function for later keyboard implementation. TODO
 // Idea is to use checkNum for any keyboard strokes, if it's not a number, or operator refuse it.
 function checkNum(num) {
   if (displayData == invType) {
@@ -35,24 +36,6 @@ function checkNum(num) {
 // Assign event listeners to all buttons
 buttons.forEach((button) => {
   button.addEventListener("click", (e) => {
-    //Debug start state
-    console.log(
-      `Start state: 
-
-      button clicked: ${e.target.className}
-      
-      setState: ${setState} 
-      display.value: ${display.value} 
-      displayData: ${displayData}
-      curNum: ${curNum} 
-      num1: ${num1} 
-      num2: ${num2} 
-      operator: ${operator}
-      result: ${result}
-      previous result: ${prevResult}`
-    )
-    //end
-
     //Number checks
     if (button.className === "btn-number") {
       getState()
@@ -67,42 +50,9 @@ buttons.forEach((button) => {
       operator = button.getAttribute("data-num")
       if (prevResult !== undefined) {
         num1 = prevResult
-        //Debug operator start
-        console.log(`PrevResult state: 
-
-      prevResult caught! is ${prevResult}
-
-      button clicked: ${e.target.className}
-      
-      setState: ${setState} 
-      display.value: ${display.value} 
-      displayData: ${displayData}
-      curNum: ${curNum} 
-      num1: ${num1} 
-      num2: ${num2} 
-      operator: ${operator}
-      result: ${result}
-      previous result: ${prevResult}`)
-        //end
       }
       if (curNum !== "") {
         if (num1 !== undefined) {
-          console.log(
-            `mid state: 
-    
-          button clicked: ${e.target.className}
-          
-          setState: ${setState} 
-          display.value: ${display.value} 
-          displayData: ${displayData}
-          curNum: ${curNum} 
-          num1: ${num1} 
-          num2: ${num2} 
-          operator: ${operator}
-          result: ${result}
-          previous result: ${prevResult}`
-          )
-          //end
           num2 = Number(curNum)
           console.log("num2 input: " + num2)
           curNum = ""
@@ -175,54 +125,9 @@ buttons.forEach((button) => {
     }
 
     prevResult = result
-    //debug new state
-    console.log(
-      `New state: 
-      setState: ${setState} 
-      display.value: ${display.value} 
-      displayData: ${displayData}
-      curNum: ${curNum} 
-      num1: ${num1} 
-      num2: ${num2} 
-      operator: ${operator}
-      result: ${result}
-      previous result: ${prevResult}`
-    )
-    //end
   })
 })
 
-// TODO - displayData processing
-// Pseudo code
-/* 
-
-When a number button is pressed
-  update displayData and proceed with accepting input
-
-create a new function for when a operator button is pressed
-  check for any invalid inputs (anything that is not a number or operators)
-    if invalid, update input field to say "invalid input"
-      clear text as soon as another button or keyboard stroke is pressed
-    input number into num1, if full input to num2
-    input operator into operator.
-  
-  
-  clear the input field, and displayData, and repeat.
-    create event listeners to listen for + - * / keyups and run this function
-
-create a function for when CLEAR is pressed
-  remove all data from numData array
-  remove all data from operatorData array
-  set value of displayData = ""
-  clear input text field 
-
-create a function for when enter is pressed, this should start calculation
-  all numbers and operators should already be of correct types
-  use reduce() to itterate through each operation, doing one operation at a time
-  
-  create event listeners to listen for ENTER on keyboard, and run this function
-*/
-// operation variables
 const OPT = ["+", "-", "*", "/"]
 
 console.log(
