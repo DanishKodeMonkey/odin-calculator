@@ -1,11 +1,13 @@
+body{
+    background-image: url('./images/desk.jpg');
+    background-size: cover;
+}
 .container{
     display: flex;
     justify-content: center;
-    background-color: bisque;
+    margin: 50px;
 }
-.calculator-container{
- background-color: aquamarine;   
-}
+
 .calculator-plate{
     max-width:500px;
     height: 400px;
@@ -13,8 +15,8 @@
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    border: 5px groove black;
-    
+    border: 20px outset black;
+    box-shadow: 15px 10px;
     border-radius: 15px;
     background-color: lightgray;
 
@@ -44,7 +46,7 @@
     display: flex;
     flex-wrap:wrap;
     gap: 1px;
-    margin: 5px;
+    margin: 20px;
 }
 button{
     flex: 1 24.5%;
@@ -52,6 +54,11 @@ button{
     font-size: 30px;
     padding: 0;
     margin: 0;
+    border: 5px outset black;
+    transition: 100ms ease-in-out;
+}
+button:active{
+    border: 5px inset black;
 }
 .btn-number{
     background: slategray;
