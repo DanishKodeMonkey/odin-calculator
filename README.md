@@ -25,3 +25,4 @@ The odin-calculator is still a work in progress, it is definitively useable, but
 As usual, check it out yourself!
 
 [Calculator is right here](https://danishkodemonkey.github.io/odin-calculator/)
+s
