@@ -142,17 +142,31 @@ buttons.forEach((button) => {
       ) {
         console.log("Sending to operate:" + num1 + "" + operator + "" + num2)
         result = operate(num1, operator, num2)
-        display.value = result
-        num1 = num2 = undefined
-        curNum = ""
+        if (result == "Err") {
+          display.value = "BOOM!"
+          num1 = num2 = undefined
+          curNum = ""
+          num1 = undefined
+          num2 = undefined
+          prevResult = undefined
+          result = undefined
+          operator = ""
+        } else {
+          display.value = result
+          num1 = num2 = undefined
+          curNum = ""
+          num1 = undefined
+          num2 = undefined
+          prevResult = undefined
+          operator = ""
+        }
       }
 
       //clear checks
     } else if (button.className == "btn-clear") {
-      displayData = undefined
       display.value = ""
       displayData = undefined
-      curNum = 0
+      curNum = ""
       num1 = undefined
       num2 = undefined
       operator = ""
@@ -278,5 +292,9 @@ function multiply(num1, num2) {
 // divide
 
 function divide(num1, num2) {
-  return Math.floor((num1 + num2) * 100) / 100
+  if (num2 == 0) {
+    return "Err"
+  } else {
+    return Math.floor((num1 / num2) * 100) / 100
+  }
 }
