@@ -76,7 +76,7 @@ button:active{
 .btn-clear{
     background-color:red;
 }
-.btn-comma{
+.btn-dot{
     background-color:orange;
 }
-.btn-back{background-color: yellow;}
+.btn-del{background-color: yellow;}
