@@ -14,6 +14,7 @@ const invType = /[a-zA-Z]+/g
 let num1
 let num2
 let operator = ""
+let newOperator = ""
 
 // if setState is true, clear data, set setState to false.
 function getState() {
@@ -47,7 +48,15 @@ buttons.forEach((button) => {
       // Operator checks
     } else if (button.className == "btn-operator") {
       getState()
-      operator = button.getAttribute("data-num")
+      if (operator !== "") {
+        newOperator = button.getAttribute("data-num")
+      } else {
+        operator = button.getAttribute("data-num")
+      }
+
+      console.log(`Operator status:
+      operator: ${operator}
+      newOperator: ${newOperator}`)
       if (prevResult !== undefined) {
         num1 = prevResult
       }
@@ -71,6 +80,12 @@ buttons.forEach((button) => {
         result = operate(num1, operator, num2)
         display.value = result
         num1 = num2 = undefined
+        if (newOperator !== "") {
+          operator = newOperator
+        }
+        console.log(`Operator status:
+      operator: ${operator}
+      newOperator: ${newOperator}`)
       }
       setState = true
 
@@ -113,7 +128,7 @@ buttons.forEach((button) => {
       }
 
       //clear checks
-    } else if (button.className == "btn-clear") {
+    } else if (button.className == "btn-clear big-btn") {
       display.value = ""
       displayData = undefined
       curNum = ""
