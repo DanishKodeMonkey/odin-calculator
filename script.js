@@ -2,7 +2,7 @@
 const buttons = document.querySelectorAll(".calculator-numpad > button")
 const display = document.getElementById("calInput")
 let curNum
-let displayData
+/* let displayData */
 display.value = ""
 let setState = false
 let result
@@ -20,20 +20,20 @@ let newOperator = ""
 function getState() {
   if (setState) {
     display.value = ""
-    displayData = 0
+    /*     displayData = 0 */
     setState = false
   }
 }
 
 //Function for later keyboard implementation. TODO
 // Idea is to use checkNum for any keyboard strokes, if it's not a number, or operator refuse it.
-function checkNum(num) {
+/* function checkNum(num) {
   if (displayData == invType) {
     console.log(`Type: ${typeof num}`)
     display.value = "Invalid char"
     setState = true
   }
-}
+} */
 // Assign event listeners to all buttons
 buttons.forEach((button) => {
   button.addEventListener("click", (e) => {
@@ -43,7 +43,7 @@ buttons.forEach((button) => {
       const buttonValue = button.getAttribute("data-num")
       curNum == undefined ? (curNum = buttonValue) : (curNum += buttonValue)
       display.value += buttonValue
-      displayData = display.value
+      /*       displayData = display.value */
 
       // Operator checks
     } else if (button.className == "btn-operator") {
@@ -96,7 +96,7 @@ buttons.forEach((button) => {
       }
       if (num1 !== undefined) {
         num2 = Number(curNum)
-        displayData = ""
+        /*         displayData = "" */
       } else {
         num1 = Number(curNum)
       }
@@ -130,13 +130,21 @@ buttons.forEach((button) => {
       //clear checks
     } else if (button.className == "btn-clear big-btn") {
       display.value = ""
-      displayData = undefined
+      /*       displayData = undefined */
       curNum = ""
       num1 = undefined
       num2 = undefined
       operator = ""
       result = undefined
       prevResult = undefined
+    }
+
+    //dot checks
+    else if (button.className == "btn-dot") {
+      if (!curNum.includes(".")) {
+        curNum += "."
+        display.value += "."
+      }
     }
 
     prevResult = result
