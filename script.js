@@ -145,8 +145,12 @@ buttons.forEach((button) => {
         curNum += "."
         display.value += "."
       }
-    }
 
+      //Del checks
+    } else if (button.className == "btn-del") {
+      curNum = curNum.substring(0, curNum.length - 1)
+      display.value = curNum
+    }
     prevResult = result
   })
 })
