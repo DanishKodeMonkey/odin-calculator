@@ -5,10 +5,9 @@ let curNum
 /* let displayData */
 display.value = ""
 let setState = false
+let endCalc = false
 let result
 let prevResult
-//RegEx for keyboard implementation. TODO
-const invType = /[a-zA-Z]+/g
 
 //Operation variables
 let num1
@@ -25,25 +24,16 @@ function getState() {
   }
 }
 
-//Function for later keyboard implementation. TODO
-// Idea is to use checkNum for any keyboard strokes, if it's not a number, or operator refuse it.
-/* function checkNum(num) {
-  if (displayData == invType) {
-    console.log(`Type: ${typeof num}`)
-    display.value = "Invalid char"
-    setState = true
-  }
-} */
 // Assign event listeners to all buttons
 buttons.forEach((button) => {
   button.addEventListener("click", (e) => {
     //Number checks
     if (button.className === "btn-number") {
       getState()
+
       const buttonValue = button.getAttribute("data-num")
       curNum == undefined ? (curNum = buttonValue) : (curNum += buttonValue)
       display.value += buttonValue
-      /*       displayData = display.value */
 
       // Operator checks
     } else if (button.className == "btn-operator") {
@@ -96,7 +86,6 @@ buttons.forEach((button) => {
       }
       if (num1 !== undefined) {
         num2 = Number(curNum)
-        /*         displayData = "" */
       } else {
         num1 = Number(curNum)
       }
@@ -116,6 +105,7 @@ buttons.forEach((button) => {
           prevResult = undefined
           result = undefined
           operator = ""
+          setState = true
         } else {
           display.value = result
           num1 = num2 = undefined
@@ -124,13 +114,14 @@ buttons.forEach((button) => {
           num2 = undefined
           prevResult = undefined
           operator = ""
+          setState = true
+          endCalc = true
         }
       }
 
       //clear checks
     } else if (button.className == "btn-clear big-btn") {
       display.value = ""
-      /*       displayData = undefined */
       curNum = ""
       num1 = undefined
       num2 = undefined
@@ -225,3 +216,53 @@ function divide(num1, num2) {
     return Math.floor((num1 / num2) * 100) / 100
   }
 }
+
+// Keyboard connection to calculator input field
+
+display.addEventListener("keydown", (e) => {
+  e.preventDefault()
+
+  const regex = /^[0-9\/\*\-\+%.\b\r]+$/
+  let inputValue = e.key
+  console.log(inputValue)
+  const keyButtonMap = {
+    Enter: ".btn-equals",
+    Backspace: ".btn-del",
+    ".": ".btn-dot",
+  }
+  if (inputValue in keyButtonMap) {
+    const buttonClass = keyButtonMap[inputValue]
+    const targetButton = document.querySelector(buttonClass)
+    if (targetButton) {
+      targetButton.click()
+      console.log(`clicked ${inputValue}`)
+    }
+  } else if (inputValue == "Backspace") {
+    const delButton = document.querySelector(".btn-del")
+    delButton.click()
+    console.log("Clicked backspace")
+  } else if (inputValue == ".") {
+    const dotButton = document.querySelector(".btn-dot")
+    dotButton.click()
+    console.log("Clicked dot")
+  } else {
+    if (!regex.test(inputValue)) {
+      console.log("invalid")
+      inputValue = inputValue.substring(0, inputValue.length - 1)
+    } else {
+      if (/^[0-9]+$/.test(inputValue)) {
+        console.log("number")
+      } else if (/^[\/\*\-\+%]/.test(inputValue)) {
+        console.log("operator")
+      }
+    }
+  }
+
+  buttons.forEach((button) => {
+    const dataNum = button.getAttribute("data-num")
+    if (dataNum === inputValue) {
+      console.log("click!")
+      button.click()
+    }
+  })
+})
