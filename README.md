@@ -18,7 +18,7 @@ The odin-calculator is still a work in progress, it is definitively useable, but
 
 - ~~Decimal button: To calculate with decimals. Add a button to the calculator that does this, but only one!~~ (DONE!)
 - ~~Backspace button: It came to me that it may be useful to delete mistakes without clearing the entire thing~~(DONE!)
-- Remainder operator button: Add functionality that works
+- ~~Remainder operator button: Add functionality that works~~(DONE!)
 - Keyboard support: I want the user to be able to use their keyboard to type in numbers and operators directly into the input field, and capture/prevent issues like writing letters (abc) or wrong operators (\ instead of /, x instead of \* etc.).
 
 ## Check it out!

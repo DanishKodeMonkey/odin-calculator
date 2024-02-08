@@ -185,6 +185,8 @@ function operate(num1, operator, num2) {
       return multiply(num1, num2)
     case "/":
       return divide(num1, num2)
+    case "%":
+      return remainder(num1, num2)
     default:
       return "operate: operator not found"
   }
@@ -206,6 +208,12 @@ function subtract(num1, num2) {
 
 function multiply(num1, num2) {
   return Math.floor(num1 * num2 * 100) / 100
+}
+
+// Remainder (Extra calculation just to make buttons fit nicely)
+
+function remainder(num1, num2) {
+  return Math.floor((num1 % num2) * 100) / 100
 }
 
 // divide
