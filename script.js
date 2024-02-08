@@ -2,14 +2,11 @@
 const buttons = document.querySelectorAll(".calculator-numpad > button")
 const display = document.getElementById("calInput")
 let curNum
-/* let displayData */
 display.value = ""
 let setState = false
 let endCalc = false
 let result
 let prevResult
-
-//Operation variables
 let num1
 let num2
 let operator = ""
@@ -19,7 +16,6 @@ let newOperator = ""
 function getState() {
   if (setState) {
     display.value = ""
-    /*     displayData = 0 */
     setState = false
   }
 }
@@ -27,29 +23,36 @@ function getState() {
 // Assign event listeners to all buttons
 buttons.forEach((button) => {
   button.addEventListener("click", (e) => {
-    //Number checks
+    // Number button checks
     if (button.className === "btn-number") {
       getState()
+
+      // If a calculation was concluded, clear data(used = or enter instead of consecutive calcs)
+      if (endCalc) {
+        num1 = num2 = prevResult = result = undefined
+        operator = newOperator = ""
+        endCalc = false
+      }
 
       const buttonValue = button.getAttribute("data-num")
       curNum == undefined ? (curNum = buttonValue) : (curNum += buttonValue)
       display.value += buttonValue
 
-      // Operator checks
+      // Operator button checks
     } else if (button.className == "btn-operator") {
       getState()
+      // Condition checks for state of calculator
+      // If the operator is occupied, assign to newOperator. ( for consecutive operations )
       if (operator !== "") {
         newOperator = button.getAttribute("data-num")
       } else {
         operator = button.getAttribute("data-num")
       }
 
-      console.log(`Operator status:
-      operator: ${operator}
-      newOperator: ${newOperator}`)
       if (prevResult !== undefined) {
         num1 = prevResult
       }
+      // Number assignment trigger.
       if (curNum !== "") {
         if (num1 !== undefined) {
           num2 = Number(curNum)
@@ -61,25 +64,22 @@ buttons.forEach((button) => {
           curNum = ""
         }
       }
+      // operate trigger if conditions are met
       if (
         typeof num1 == "number" &&
         typeof num2 == "number" &&
         typeof operator == "string"
       ) {
-        operate(num1, operator, num2)
         result = operate(num1, operator, num2)
         display.value = result
         num1 = num2 = undefined
         if (newOperator !== "") {
           operator = newOperator
         }
-        console.log(`Operator status:
-      operator: ${operator}
-      newOperator: ${newOperator}`)
       }
       setState = true
 
-      //Equals checks
+      // Equals button checks
     } else if (button.className == "btn-equals") {
       if (prevResult !== undefined) {
         num1 = prevResult
@@ -94,8 +94,8 @@ buttons.forEach((button) => {
         typeof num2 == "number" &&
         typeof operator == "string"
       ) {
-        console.log("Sending to operate:" + num1 + "" + operator + "" + num2)
         result = operate(num1, operator, num2)
+        // Catch error in case of division by 0, if so, snarky remark and reset calculator
         if (result == "Err") {
           display.value = "BOOM!"
           num1 = num2 = undefined
@@ -116,10 +116,17 @@ buttons.forEach((button) => {
           operator = ""
           setState = true
           endCalc = true
+          // Remove focus from input field,
+          // if focus is regained assume new operation and clear display
+          display.blur()
+          display.addEventListener("focus", (e) => {
+            display.value = ""
+            e.currentTarget.removeEventListener("focus", e)
+          })
         }
       }
 
-      //clear checks
+      // clear checks
     } else if (button.className == "btn-clear big-btn") {
       display.value = ""
       curNum = ""
@@ -130,14 +137,14 @@ buttons.forEach((button) => {
       prevResult = undefined
     }
 
-    //dot checks
+    // dot checks
     else if (button.className == "btn-dot") {
       if (!curNum.includes(".")) {
         curNum += "."
         display.value += "."
       }
 
-      //Del checks
+      // Del checks
     } else if (button.className == "btn-del") {
       curNum = curNum.substring(0, curNum.length - 1)
       display.value = curNum
@@ -156,7 +163,7 @@ function operate(num1, operator, num2) {
   num2: ${num2}
   operator: ${operator}`)
 
-  //Typecheck before operation
+  // Type check before operation
   if (
     typeof num1 !== "number" ||
     typeof num2 !== "number" ||
@@ -182,6 +189,7 @@ function operate(num1, operator, num2) {
       return "operate: operator not found"
   }
 }
+
 /* Use cases the calculator should have */
 // add
 
@@ -220,49 +228,38 @@ function divide(num1, num2) {
 // Keyboard connection to calculator input field
 
 display.addEventListener("keydown", (e) => {
-  e.preventDefault()
-
   const regex = /^[0-9\/\*\-\+%.\b\r]+$/
   let inputValue = e.key
-  console.log(inputValue)
+
   const keyButtonMap = {
     Enter: ".btn-equals",
     Backspace: ".btn-del",
     ".": ".btn-dot",
   }
+
+  // Handle special characters input assigned to corresponding UI button
   if (inputValue in keyButtonMap) {
+    e.preventDefault()
     const buttonClass = keyButtonMap[inputValue]
     const targetButton = document.querySelector(buttonClass)
     if (targetButton) {
       targetButton.click()
-      console.log(`clicked ${inputValue}`)
     }
-  } else if (inputValue == "Backspace") {
-    const delButton = document.querySelector(".btn-del")
-    delButton.click()
-    console.log("Clicked backspace")
-  } else if (inputValue == ".") {
-    const dotButton = document.querySelector(".btn-dot")
-    dotButton.click()
-    console.log("Clicked dot")
   } else {
-    if (!regex.test(inputValue)) {
-      console.log("invalid")
-      inputValue = inputValue.substring(0, inputValue.length - 1)
+    // Handle other keyboard inputs
+    // Check if valid inputs, test against regex
+    if (regex.test(inputValue)) {
+      // Handle button clicks based on data-num attribute
+      buttons.forEach((button) => {
+        const dataNum = button.getAttribute("data-num")
+        if (dataNum === inputValue) {
+          e.preventDefault()
+          button.click()
+        }
+      })
+      // if test failed, remove entry
     } else {
-      if (/^[0-9]+$/.test(inputValue)) {
-        console.log("number")
-      } else if (/^[\/\*\-\+%]/.test(inputValue)) {
-        console.log("operator")
-      }
+      inputValue = inputValue.slice(0, -1)
     }
   }
-
-  buttons.forEach((button) => {
-    const dataNum = button.getAttribute("data-num")
-    if (dataNum === inputValue) {
-      console.log("click!")
-      button.click()
-    }
-  })
 })
